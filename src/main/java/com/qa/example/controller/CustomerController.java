@@ -3,6 +3,8 @@ package com.qa.example.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,16 +22,17 @@ public class CustomerController {
 	
 	// Create
 	@PostMapping("/create")
-	public Customer createCustomer(@RequestBody Customer c) {
+	public ResponseEntity<Customer> createCustomer(@RequestBody Customer c) {
 		this.customers.add(c);
 		Customer created = this.customers.get(this.customers.size()-1);
-		return created;
+		ResponseEntity<Customer> response = new ResponseEntity<Customer>(created, HttpStatus.CREATED);
+		return response;
 	}
 	
 	// ReadAll
 	@GetMapping("/getAll")
-	public List<Customer> getAllCustomers() {
-		return this.customers;
+	public ResponseEntity<List<Customer>> getAllCustomers() {
+		return ResponseEntity.ok(this.customers);
 	}
 	
 	// Read by id
@@ -40,13 +43,15 @@ public class CustomerController {
 	
 	// Update by id
 	@PutMapping("/replace/{id}")
-	public Customer replaceCustomer(@PathVariable Integer id, @RequestBody Customer c) {
+	public ResponseEntity<Customer> replaceCustomer(@PathVariable Integer id, @RequestBody Customer c) {
 		Customer customer = this.customers.set(id, c);
-		return customer;
+		ResponseEntity<Customer> response = new ResponseEntity<Customer>(customer, HttpStatus.ACCEPTED);
+		return response;
 	}
 	
 	@DeleteMapping("/remove/{id}")
-	public void removeCustomer(@PathVariable Integer id) {
+	public ResponseEntity<?> removeCustomer(@PathVariable Integer id) {
 		this.customers.remove(id.intValue());
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
