@@ -1,6 +1,5 @@
 package com.qa.example.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -14,17 +13,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qa.example.domain.Customer;
+import com.qa.example.service.CustomerService;
 
 @RestController
 public class CustomerController {
+	
+	private CustomerService service;
 
-	private List<Customer> customers = new ArrayList<>();
+	public CustomerController(CustomerService service) {
+		this.service = service;
+	}
 	
 	// Create
 	@PostMapping("/create")
 	public ResponseEntity<Customer> createCustomer(@RequestBody Customer c) {
-		this.customers.add(c);
-		Customer created = this.customers.get(this.customers.size()-1);
+		Customer created = service.createCustomer(c);
 		ResponseEntity<Customer> response = new ResponseEntity<Customer>(created, HttpStatus.CREATED);
 		return response;
 	}
@@ -32,26 +35,26 @@ public class CustomerController {
 	// ReadAll
 	@GetMapping("/getAll")
 	public ResponseEntity<List<Customer>> getAllCustomers() {
-		return ResponseEntity.ok(this.customers);
+		return ResponseEntity.ok(service.getAllCustomers());
 	}
 	
 	// Read by id
 	@GetMapping("/get/{id}")
 	public Customer getCustomer(@PathVariable Integer id) {
-		return this.customers.get(id);
+		return service.getCustomer(id);
 	}
 	
 	// Update by id
 	@PutMapping("/replace/{id}")
 	public ResponseEntity<Customer> replaceCustomer(@PathVariable Integer id, @RequestBody Customer c) {
-		Customer customer = this.customers.set(id, c);
+		Customer customer = service.replaceCustomer(id, c);
 		ResponseEntity<Customer> response = new ResponseEntity<Customer>(customer, HttpStatus.ACCEPTED);
 		return response;
 	}
 	
 	@DeleteMapping("/remove/{id}")
 	public ResponseEntity<?> removeCustomer(@PathVariable Integer id) {
-		this.customers.remove(id.intValue());
+		service.removeCustomer(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

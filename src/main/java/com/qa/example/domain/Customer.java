@@ -1,9 +1,24 @@
 package com.qa.example.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Customer {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment id
 	private Integer id;
+	
+	@Column(nullable = false)
 	private String name;
+	
+	@Column(nullable = false)
 	private Integer age;
+	
+	@Column(nullable = false)
 	private Integer height;
 	
 	public Customer(Integer id, String name, Integer age, Integer height) {
