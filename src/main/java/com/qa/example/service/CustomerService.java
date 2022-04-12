@@ -1,38 +1,62 @@
 package com.qa.example.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.qa.example.domain.Customer;
+import com.qa.example.repo.CustomerRepo;
 
 @Service
 public class CustomerService {
 	
-	private List<Customer> customers = new ArrayList<>();
+	private CustomerRepo repo;
+	
+	@Autowired
+	public CustomerService(CustomerRepo repo) {
+		super();
+		this.repo = repo;
+	}
 	
 	public Customer createCustomer(Customer c) {
-		this.customers.add(c);
-		Customer created = this.customers.get(this.customers.size()-1);
+		Customer created = this.repo.save(c);
 		return created;
 	}
 	
 	public List<Customer> getAllCustomers() {
-		return this.customers;
+		return this.repo.findAll();
 	}
 	
 	public Customer getCustomer(Integer id) {
-		return this.customers.get(id);
+		Optional<Customer> data = this.repo.findById(id);
+		return data.get();
 	}
 	
-	public Customer replaceCustomer(Integer id, Customer c) {
-		Customer updated = this.customers.set(id, c);
+	public Customer replaceCustomer(Integer id, Customer updCustomer) {
+		Customer curCustomer = this.repo.findById(id).get();
+		curCustomer.setName(updCustomer.getName());
+		curCustomer.setAge(updCustomer.getAge());
+		curCustomer.setHeight(updCustomer.getHeight());
+		
+		// Return the current customer as it has been updated
+		Customer updated = this.repo.save(curCustomer);
 		return updated;
 	}
 	
 	public void removeCustomer(@PathVariable Integer id) {
-		this.customers.remove(id.intValue());
+		this.repo.deleteById(id);
+	}
+	
+	public List<Customer> getCustomersByName(String name) {
+		List<Customer> data = this.repo.findByNameIgnoreCase(name);
+		return data;
+	}
+	
+	public List<Customer> getCustomersByAge(Integer age) {
+		List<Customer> data = this.repo.findByAge(age);
+		return data;
 	}
 }

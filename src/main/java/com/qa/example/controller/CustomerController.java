@@ -57,4 +57,16 @@ public class CustomerController {
 		service.removeCustomer(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+	
+	@GetMapping("/getByName/{name}")
+	public ResponseEntity<List<Customer>> getCustomersByName(@PathVariable String name) {
+		List<Customer> data = this.service.getCustomersByName(name);
+		return ResponseEntity.ok(data);
+	}
+	
+	@GetMapping("/getByAge/{age}")
+	public ResponseEntity<List<Customer>> getCustomersByAge(@PathVariable Integer age) {
+		List<Customer> data = this.service.getCustomersByAge(age);
+		return ResponseEntity.ok(data);
+	}
 }
