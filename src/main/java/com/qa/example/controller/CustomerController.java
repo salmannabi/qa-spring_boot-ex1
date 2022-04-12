@@ -27,7 +27,7 @@ public class CustomerController {
 	// Create
 	@PostMapping("/create")
 	public ResponseEntity<Customer> createCustomer(@RequestBody Customer c) {
-		Customer created = service.createCustomer(c);
+		Customer created = service.create(c);
 		ResponseEntity<Customer> response = new ResponseEntity<Customer>(created, HttpStatus.CREATED);
 		return response;
 	}
@@ -35,26 +35,26 @@ public class CustomerController {
 	// ReadAll
 	@GetMapping("/getAll")
 	public ResponseEntity<List<Customer>> getAllCustomers() {
-		return ResponseEntity.ok(service.getAllCustomers());
+		return ResponseEntity.ok(service.getAll());
 	}
 	
 	// Read by id
 	@GetMapping("/get/{id}")
 	public Customer getCustomer(@PathVariable Integer id) {
-		return service.getCustomer(id);
+		return service.getOne(id);
 	}
 	
 	// Update by id
 	@PutMapping("/replace/{id}")
 	public ResponseEntity<Customer> replaceCustomer(@PathVariable Integer id, @RequestBody Customer c) {
-		Customer customer = service.replaceCustomer(id, c);
+		Customer customer = service.replace(id, c);
 		ResponseEntity<Customer> response = new ResponseEntity<Customer>(customer, HttpStatus.ACCEPTED);
 		return response;
 	}
 	
 	@DeleteMapping("/remove/{id}")
 	public ResponseEntity<?> removeCustomer(@PathVariable Integer id) {
-		service.removeCustomer(id);
+		service.remove(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	

@@ -11,7 +11,7 @@ import com.qa.example.domain.Customer;
 import com.qa.example.repo.CustomerRepo;
 
 @Service
-public class CustomerService {
+public class CustomerService implements ServiceIF<Customer> {
 	
 	private CustomerRepo repo;
 	
@@ -21,21 +21,21 @@ public class CustomerService {
 		this.repo = repo;
 	}
 	
-	public Customer createCustomer(Customer c) {
+	public Customer create(Customer c) {
 		Customer created = this.repo.save(c);
 		return created;
 	}
 	
-	public List<Customer> getAllCustomers() {
+	public List<Customer> getAll() {
 		return this.repo.findAll();
 	}
 	
-	public Customer getCustomer(Integer id) {
+	public Customer getOne(Integer id) {
 		Optional<Customer> data = this.repo.findById(id);
 		return data.get();
 	}
 	
-	public Customer replaceCustomer(Integer id, Customer updCustomer) {
+	public Customer replace(Integer id, Customer updCustomer) {
 		Customer curCustomer = this.repo.findById(id).get();
 		curCustomer.setName(updCustomer.getName());
 		curCustomer.setAge(updCustomer.getAge());
@@ -46,7 +46,7 @@ public class CustomerService {
 		return updated;
 	}
 	
-	public void removeCustomer(@PathVariable Integer id) {
+	public void remove(@PathVariable Integer id) {
 		this.repo.deleteById(id);
 	}
 	
